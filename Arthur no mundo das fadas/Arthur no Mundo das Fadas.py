@@ -31,7 +31,7 @@ class Player(pygame.sprite.Sprite):#aqui construimos os comandos e mecanica do p
  
 
         if len(platform_hit_list) > 0 or self.rect.bottom >= janela_height:#se não colidir com nada o player pula
-            self.change_y = -10#pula 10 casas para cima
+            self.change_y = -12#pula 10 casas para cima
         
     def parar(self):#para horizontalmente e verticalmente
         self.change_x = 0
@@ -99,10 +99,8 @@ class Player(pygame.sprite.Sprite):#aqui construimos os comandos e mecanica do p
                 self.rect.right = janela_widht
         if self.rect.left < 0:
                 self.rect.left = 0
-        if self.rect.top < 0:
-                self.rect.top = 0
         if self.rect.bottom > janela_height:
-                self.rect.bottom = janela_height
+                self.kill()
         
         
         '''a partir daqui começamos a usar sprites e condiçoes para que elas variassem para dar sensação de movimento'''
@@ -167,7 +165,7 @@ class Platform(pygame.sprite.Sprite):#criação das plataformas
 class Background(pygame.sprite.Sprite):#criação do fundo que é uma sprite sem mecanica
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load('back.png')
+        self.image = pygame.image.load('background.jpg')
         self.rect = self.image.get_rect()
         self.rect.x = 0#posiçao x inicial da tela
         self.rect.y = 0#posiçao y inicial da tela
@@ -232,10 +230,21 @@ class Level01(Level):
     def __init__(self,player):
         Level.__init__(self,player)
         
-        self.level_limit = -1500#tamanho do level1
+        self.level_limit = -5000#tamanho do level1
         
-        level = [[2500, 200, 0, 500],
-            
+        level = [[618, 100, 0, 500],
+                 [900,100,890,500],
+[222,74,1087,293],
+[74,74,1540,330],
+[74,74,1811,219],
+[74,74,2070,219],
+[5000,100,2325,500],
+[74,74,2600,180],
+[74,74,3186,180],
+[74,74,2895,104],
+
+
+
                  ]#widht,height , x e y dos blocos e ele é criado na tela
         for platform in level:#usa todas coordenadas indicadas no array acima para criar blocos nesses lugares
             block = Platform(platform[0], platform[1])
@@ -244,12 +253,6 @@ class Level01(Level):
             block.player = self.player
             self.plataformas.add(block)
         level_m= [['M1.png','M12.png',200,450,70],
-                  ['M1.png','M12.png',220,450,80],
-['M1.png','M12.png',350,450,90],
-['M1.png','M12.png',320,450,100],
-['M1.png','M12.png',300,450,110],
-['M1.png','M12.png',260,450,120],
-['M1.png','M12.png',290,450,130],
 
                  ] #define widht , height , x , y e movimento no eixo inicial do monstro.  É criado na tela
         
