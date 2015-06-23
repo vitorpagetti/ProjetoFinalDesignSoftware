@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):#aqui construimos os comandos e mecanica do p
     def __init__(self):
         super().__init__()#inicia na classe player o init de sprite.Sprite
         
-        self.image = pygame.image.load('AD.png')#define a imagem inicial da classe player
+        self.image = pygame.image.load('imagens/AD.png')#define a imagem inicial da classe player
         self.rect = self.image.get_rect()#transforma a imagem em um retangulo. Com isso, podemos usar funçoes especificas de retangulos
         
         self.change_x = 0#atribui o valor inicial do movimento do personagem no eixo X
@@ -105,30 +105,30 @@ class Player(pygame.sprite.Sprite):#aqui construimos os comandos e mecanica do p
         
         '''a partir daqui começamos a usar sprites e condiçoes para que elas variassem para dar sensação de movimento'''
         if self.change_y == 0 and self.change_x == 0:
-            self.image = pygame.image.load('AD.png')
+            self.image = pygame.image.load('imagens/AD.png')
         if self.change_y != 0:
             if self.change_x > 0:
                 if self.rect.y % 1.5 == 0:
-                    self.image = pygame.image.load('JD.png')
+                    self.image = pygame.image.load('imagens/JD.png')
                 if self.rect.y % 1.5 != 0:
-                    self.image = pygame.image.load('AD.png')
+                    self.image = pygame.image.load('imagens/AD.png')
             if self.change_x < 0:
                 if self.rect.y % 1.5 == 0:
-                    self.image = pygame.image.load('JE.png')
+                    self.image = pygame.image.load('imagens/JE.png')
                 if self.rect.y % 1.5 != 0:
-                    self.image = pygame.image.load('AE.png')
+                    self.image = pygame.image.load('imagens/AE.png')
         
         if self.change_y == 0:
             if self.change_x > 0:
                 if self.rect.x % 3 != 0:
-                    self.image = pygame.image.load('AD.png')
+                    self.image = pygame.image.load('imagens/AD.png')
                 if self.rect.x % 3 == 0:
-                    self.image = pygame.image.load('AD.png')
+                    self.image = pygame.image.load('imagens/AD.png')
             if self.change_x < 0:
                 if self.rect.x % 3 == 0:
-                    self.image = pygame.image.load('AE.png')
+                    self.image = pygame.image.load('imagens/AE.png')
                 if self.rect.x % 3 != 0:
-                    self.image = pygame.image.load('AE.png')
+                    self.image = pygame.image.load('imagens/AE.png')
                     
             
                 
@@ -138,20 +138,20 @@ class Player(pygame.sprite.Sprite):#aqui construimos os comandos e mecanica do p
         '''if self.change_y != 0:
             if self.change_x > 0:    
                 if self.rect.y % 2 == 0:
-                    self.image = pygame.image.load('JD.png')
+                    self.image = pygame.image.load('imagens/JD.png')
                 if self.rect.y % 2 > 0:
-                    self.image = pygame.image.load('AD.png')
+                    self.image = pygame.image.load('imagens/AD.png')
             if self.change_x < 0:
                 if self.rect.y % 2 == 0:
-                    self.image = pygame.image.load('JE.png')
+                    self.image = pygame.image.load('imagens/JE.png')
                 if self.rect.y % 2 > 0:
-                    self.image = pygame.image.load('AE.png')
+                    self.image = pygame.image.load('imagens/AE.png')
                     
         if self.change_y == 0 or self.change_x == 0:
             if self.change_x < 0:
-                self.image = pygame.image.load('AE.png')
+                self.image = pygame.image.load('imagens/AE.png')
             if self.change_x > 0:
-                self.image = pygame.image.load('AD.png')'''
+                self.image = pygame.image.load('imagens/AD.png')'''
         
             
 class Platform(pygame.sprite.Sprite):#criação das plataformas
@@ -165,7 +165,7 @@ class Platform(pygame.sprite.Sprite):#criação das plataformas
 class Background(pygame.sprite.Sprite):#criação do fundo que é uma sprite sem mecanica
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load('background.jpg')
+        self.image = pygame.image.load('imagens/background.jpg')
         self.rect = self.image.get_rect()
         self.rect.x = 0#posiçao x inicial da tela
         self.rect.y = 0#posiçao y inicial da tela
@@ -252,7 +252,7 @@ class Level01(Level):
             block.rect.y = platform[3]
             block.player = self.player
             self.plataformas.add(block)
-        level_m= [['M1.png','M12.png',200,450,70],
+        level_m= [['imagens/M1.png','imagens/M12.png',200,450,70],
 
                  ] #define widht , height , x , y e movimento no eixo inicial do monstro.  É criado na tela
         
@@ -277,7 +277,7 @@ def main():
     screen = pygame.display.set_mode(size)#CRIA A TELA
  
     pygame.display.set_caption("Arthur no mundo das fadas")#titulo da janela
-    pygame.display.set_icon(pygame.image.load(("fada.png")))#desenho do icone
+    pygame.display.set_icon(pygame.image.load(("imagens/fada.png")))#desenho do icone
     pygame.mixer.music.load('musica.ogg') #carrega musica do jogo
     
     
