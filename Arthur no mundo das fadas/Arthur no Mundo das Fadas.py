@@ -103,7 +103,7 @@ class Player(pygame.sprite.Sprite):#aqui construimos os comandos e mecanica do p
                 monster.kill()
                 self.change_y = -10
         
-        hit3 = pygame.sprite.spritecollide(self,self.level.moedas,True)#moedas desaparecem caso haja colisao
+        pygame.sprite.spritecollide(self,self.level.moedas,True)#moedas desaparecem caso haja colisao
                 
         '''aqui criamos a mecanica para que o player nao saia da tela , meio que uma "parede" '''               
         if self.rect.left < 0:
@@ -210,25 +210,21 @@ class Level(): #criação de uma classe pai "level" para podermos criar outros l
         for background in self.backgrounds:
             background.rect.x += mudar_x
 class Moedas(pygame.sprite.Sprite):
-    def __init__(self,sprite):
+    def __init__(self):
         super().__init__()
-        self.image = pygame.image.load(sprite)
+        self.image = pygame.image.load('imagens/moeda.png')
         self.rect = self.image.get_rect()
-        self.sprite = sprite
 
 class Monstros(pygame.sprite.Sprite):
-    def __init__(self,sprite,sprite2,limite,sprite3,sprite4):
+    '''como os monstros serão os mesmos nao é necessário colocar as sprites no init'''
+    def __init__(self,limite):
         super().__init__()
-        self.image = pygame.image.load(sprite)
+        self.image = pygame.image.load('imagens/MD.png')
         self.rect = self.image.get_rect()
         self.limitemax = self.rect.x + limite#cria o movimento dos monstros
         self.limitemin = self.rect.x - limite
         self.change_y = 0
         self.change_x = 2
-        self.sprite = sprite#define as sprites
-        self.sprite2= sprite2
-        self.sprite3 = sprite3
-        self.sprite4 = sprite4
     def update(self):
         
         self.rect.x += self.change_x
@@ -241,14 +237,14 @@ class Monstros(pygame.sprite.Sprite):
             self.change_x = 2
         if self.change_x > 0:
             if self.rect.x % 3 != 0:
-                self.image = pygame.image.load(self.sprite)
+                self.image = pygame.image.load('imagens/MD.png')
             if self.rect.x % 3 == 0:
-                self.image = pygame.image.load(self.sprite3)
+                self.image = pygame.image.load('imagens/MD2.png')
         if self.change_x < 0:
             if self.rect.x % 3 != 0:
-                self.image = pygame.image.load(self.sprite2)
+                self.image = pygame.image.load('imagens/ME.png')
             if self.rect.x % 3 == 0:
-                self.image = pygame.image.load(self.sprite4)
+                self.image = pygame.image.load('imagens/ME2.png')
 
                 
 class Level01(Level):
@@ -276,26 +272,26 @@ class Level01(Level):
             block.rect.y = platform[3]
             block.player = self.player
             self.plataformas.add(block)
-        level_m= [['imagens/MD.png','imagens/ME.png',200,450,70,'imagens/MD2.png','imagens/ME2.png'],
+        level_m= [[200,450,70],
 
                  ] #define widht , height , x , y e movimento no eixo inicial do monstro.  É criado na tela
         
         
         for enemy in level_m:#usa todas coordenadas indicadas no array acima para criar monstros nesses lugares
-            monstro = Monstros(enemy[0],enemy[1],enemy[4],enemy[5],enemy[6])
-            monstro.rect.x = enemy[2]
-            monstro.rect.y = enemy[3]
+            monstro = Monstros(enemy[2])
+            monstro.rect.x = enemy[0]
+            monstro.rect.y = enemy[1]
             monstro.player = self.player
-            monstro.limitemax = enemy[2] + enemy[4]
-            monstro.limitemin = enemy[2] - enemy[4]
+            monstro.limitemax = enemy[0] + enemy[2]
+            monstro.limitemin = enemy[0] - enemy[2]
             self.monstros.add(monstro)
-        back = Background()#adiciona o background no level      
-        self.backgrounds.add(back)
-        moedas = [['imagens/moeda.png',200,400]]        
+        back = Background()      
+        self.backgrounds.add(back)#adiciona o background no level
+        moedas = [[200,400]]#x e y das moedas na tela        
         for moeda in moedas:
-            coin = Moedas(moeda[0])
-            coin.rect.x = moeda[1]
-            coin.rect.y = moeda[2]
+            coin = Moedas()
+            coin.rect.x = moeda[0]
+            coin.rect.y = moeda[1]
             self.moedas.add(coin)            
 def main():
     """ programa principal"""
