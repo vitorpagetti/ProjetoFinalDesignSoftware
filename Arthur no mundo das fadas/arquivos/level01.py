@@ -1,12 +1,12 @@
 import level,platform,monstros,background,pygame,asas
 class Level01(level.Level):
     def __init__(self,player):
-        super().__init__(player)
+        level.Level.__init__(self,player)
         
         self.level_limit = -4600#tamanho do level1
         musica = pygame.mixer.Sound('musicas/musica.ogg')
         musica.play()
-        level = [[618, 100, 0, 500],
+        LEVEL = [[618, 100, 0, 500],
                  [900,100,890,500],
 [222,74,1087,293],
 [74,74,1540,330],
@@ -20,8 +20,8 @@ class Level01(level.Level):
 
 
                  ]#widht,height , x e y dos blocos e ele é criado na tela
-        for plataforma in level:#usa todas coordenadas indicadas no array acima para criar blocos nesses lugares
-            block = platform.Platform(plataforma[0], plataforma[1])
+        for plataforma in LEVEL:#usa todas coordenadas indicadas no array acima para criar blocos nesses lugares
+            block = platform.Platforma(plataforma[0], plataforma[1])
             block.rect.x = plataforma[2]
             block.rect.y = plataforma[3]
             block.player = self.player

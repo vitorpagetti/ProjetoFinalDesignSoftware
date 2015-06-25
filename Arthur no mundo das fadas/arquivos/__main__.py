@@ -1,4 +1,4 @@
-import asas,background,level,level01,moedas,monstros,pygame,player,platform
+import level01,pygame,player
 
 def main():
     """ programa principal"""
@@ -15,7 +15,7 @@ def main():
  
    
     level_list = []#lista dos levels
-    level_list.append( level01.Level01(jogador) )
+    level_list.append(level01.Level01(jogador) )
  
    
     current_level_no = 0#level inicial
@@ -26,7 +26,7 @@ def main():
  
     player.rect.x = 0#posiçao inicial do player na tela
     player.rect.y = 300#posiçao inicial do player na tela
-    active_sprite_list.add(player)
+    active_sprite_list.add(jogador)
  
    
     done = False
