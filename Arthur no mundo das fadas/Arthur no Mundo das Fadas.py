@@ -5,7 +5,15 @@ BLACK = (0,0,0)
 '''janela height e widht serve para definirmos o tamanho da tela que será inicializada'''
 janela_height = 600
 janela_widht = 800
- 
+
+class Desenhar(pygame.sprite.Sprite):#escreve textos na tela
+    def __init__(self,sprite):
+        super().__init__()
+        self.image = pygame.image.load(sprite)
+        self.rect = self.image.get.rect()
+        self.rect.x = 300
+        self.rect.y = 400
+        
 class Player(pygame.sprite.Sprite):#aqui construimos os comandos e mecanica do player por meio de uma classe
 
     '''pygame.sprite.Sprite é usado para chamarmos essa classe que vem na biblioteca pygame. Com ela,
@@ -81,10 +89,13 @@ class Player(pygame.sprite.Sprite):#aqui construimos os comandos e mecanica do p
         for monster in hit:
             if self.change_x > 0 and self.change_y == 0:
                 self.kill()
+                pygame.quit()
             elif self.change_x < 0 and self.change_y == 0:
                 self.kill()
+                pygame.quit()
             if self.change_x == 0 and self.change_y == 0:
                 self.kill()
+                pygame.quit()
         
         hit2 = pygame.sprite.spritecollide(self,self.level.monstros,False)
         for monster in hit2:
@@ -92,11 +103,7 @@ class Player(pygame.sprite.Sprite):#aqui construimos os comandos e mecanica do p
                 monster.kill()
                 self.change_y = -10
                 
-                
-                
         '''aqui criamos a mecanica para que o player nao saia da tela , meio que uma "parede" '''               
-        if self.rect.right > janela_widht:
-                self.rect.right = janela_widht
         if self.rect.left < 0:
                 self.rect.left = 0
         if self.rect.bottom > janela_height:
@@ -165,16 +172,18 @@ class Platform(pygame.sprite.Sprite):#criação das plataformas
 class Background(pygame.sprite.Sprite):#criação do fundo que é uma sprite sem mecanica
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load('imagens/background.jpg')
+        self.image = pygame.image.load('imagens/background.jpg')#define a tela do jogo
         self.rect = self.image.get_rect()
         self.rect.x = 0#posiçao x inicial da tela
         self.rect.y = 0#posiçao y inicial da tela
+
         
 class Level(): #criação de uma classe pai "level" para podermos criar outros levels em seuigda
     def __init__(self,player):
         self.plataformas = pygame.sprite.Group()#cria grupos em que as sprites sao adicionadas
         self.monstros = pygame.sprite.Group()
-        self.backgrounds = pygame.sprite.Group()        
+        self.backgrounds = pygame.sprite.Group()
+        self.desenhar = pygame.sprite.Group()        
         self.player = player
         self.mudar_mundo = 0#define o mundo inicial
         self.level_limit = -1000#define o tamanho do level
@@ -187,6 +196,7 @@ class Level(): #criação de uma classe pai "level" para podermos criar outros l
         self.plataformas.draw(screen)    
         self.backgrounds.draw(screen)
         self.monstros.draw(screen)
+        self.desenhar.draw(screen)
     def shift_world(self, mudar_x):
         self.mudar_mundo += mudar_x#define a velocidade em que a tela se mexe 
         for platform in self.plataformas:
@@ -214,9 +224,9 @@ class Monstros(pygame.sprite.Sprite):
         self.rect.y += self.change_y
         if self.rect.right < 0:
             self.change_x = 0
-        if self.rect.x == self.limitemax:
+        if self.rect.x == self.limitemax:#movimento do monstro para esquerda
             self.change_x = - 2
-        if self.rect.x == self.limitemin:
+        if self.rect.x == self.limitemin:#movimento do monstro para direita
             self.change_x = 2
         if self.change_x != 0:
             if self.rect.x % 5 != 0:
@@ -230,8 +240,7 @@ class Level01(Level):
     def __init__(self,player):
         Level.__init__(self,player)
         
-        self.level_limit = -5000#tamanho do level1
-        
+        self.level_limit = -4600#tamanho do level1
         level = [[618, 100, 0, 500],
                  [900,100,890,500],
 [222,74,1087,293],
@@ -279,6 +288,22 @@ def main():
     pygame.display.set_caption("Arthur no mundo das fadas")#titulo da janela
     pygame.display.set_icon(pygame.image.load(("imagens/fada.png")))#desenho do icone
     pygame.mixer.music.load('musica.ogg') #carrega musica do jogo
+    
+    
+	# Fill background
+    background = pygame.Surface(screen.get_size())
+    background = background.convert()
+    background.fill((250, 250, 250))
+
+    # Display some text
+    font = pygame.font.Font(None, 36)
+    text = font.render("Hello There", 1, (10, 10, 10))
+    textpos = text.get_rect()
+    textpos.centerx = background.get_rect().centerx
+    background.blit(text, textpos)
+
+	# Blit everything to the screen
+    screen.blit(background, (0, 0))
     
     
     pygame.mixer.music.play()#roda a musica
@@ -330,10 +355,7 @@ def main():
                 if event.key == pygame.K_d:
                     player.parar()
                     
-
                             
-                    
-        
         active_sprite_list.update()#atualiza o grupo
         
         current_level.update()
@@ -351,12 +373,13 @@ def main():
                 current_level_no += 1
                 current_level = level_list[current_level_no]
                 player.level = current_level
-        
-        
-        
+                
+        '''aqui desenhamos tudo na tela'''        
+        screen.blit(background, (0, 0))
         current_level.draw(screen)
         active_sprite_list.draw(screen)
- 
+
+        
         clock.tick(60)#60 fps de atualizaçao
  
  
