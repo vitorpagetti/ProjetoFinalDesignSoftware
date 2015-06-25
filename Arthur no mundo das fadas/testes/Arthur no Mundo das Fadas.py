@@ -6,13 +6,8 @@ BLACK = (0,0,0)
 janela_height = 600
 janela_widht = 800
 
-class Desenhar(pygame.sprite.Sprite):#escreve textos na tela
-    def __init__(self,sprite):
-        super().__init__()
-        self.image = pygame.image.load(sprite)
-        self.rect = self.image.get.rect()
-        self.rect.x = 300
-        self.rect.y = 400
+
+
         
 class Player(pygame.sprite.Sprite):#aqui construimos os comandos e mecanica do player por meio de uma classe
 
@@ -56,7 +51,7 @@ class Player(pygame.sprite.Sprite):#aqui construimos os comandos e mecanica do p
             self.change_y = 0
             self.rect.y = janela_height - self.rect.height
     def update(self):
-        
+        morreu = pygame.mixer.Sound('musicas/fudeu.ogg')
         self.calc_grav()
         
         self.rect.x += self.change_x#atualiza a posiçao do player na tela no eixo x
@@ -103,13 +98,23 @@ class Player(pygame.sprite.Sprite):#aqui construimos os comandos e mecanica do p
                 monster.kill()
                 self.change_y = -10
         
-        pygame.sprite.spritecollide(self,self.level.moedas,True)#moedas desaparecem caso haja colisao
+        som = pygame.sprite.spritecollide(self,self.level.moedas,True)#moedas desaparecem caso haja colisao
+        for barulho in som:
+            moeda = pygame.mixer.Sound('musicas/moeda.ogg')#carrega musica moeda
+            moeda.play()#roda musica moeda
+        
+        vitoria = pygame.sprite.spritecollide(self,self.level.asas,True)#colisao entre as reais de arthur e ele
+        for barulho in vitoria:
+            bvitoria = pygame.mixer.Sound('musicas/vitoria.ogg')
+            bvitoria.play()
+            pygame.quit()#
                 
         '''aqui criamos a mecanica para que o player nao saia da tela , meio que uma "parede" '''               
         if self.rect.left < 0:
                 self.rect.left = 0
         if self.rect.bottom > janela_height:
                 self.kill()
+                morreu.play()
         
         
         '''a partir daqui começamos a usar sprites e condiçoes para que elas variassem para dar sensação de movimento'''
@@ -132,16 +137,16 @@ class Player(pygame.sprite.Sprite):#aqui construimos os comandos e mecanica do p
                 if self.rect.x % 3 != 0:
                     self.image = pygame.image.load('imagens/AD.png')
                 if self.rect.x % 3 == 0:
-                    self.image = pygame.image.load('imagens/AD.png')
+                    self.image = pygame.image.load('imagens/AD2.png')
             if self.change_x < 0:
                 if self.rect.x % 3 == 0:
                     self.image = pygame.image.load('imagens/AE.png')
                 if self.rect.x % 3 != 0:
-                    self.image = pygame.image.load('imagens/AE.png')
+                    self.image = pygame.image.load('imagens/AE2.png')
                     
             
                 
-                
+            
 
 
         '''if self.change_y != 0:
@@ -185,7 +190,9 @@ class Level(): #criação de uma classe pai "level" para podermos criar outros l
         self.plataformas = pygame.sprite.Group()#cria grupos em que as sprites sao adicionadas
         self.monstros = pygame.sprite.Group()
         self.backgrounds = pygame.sprite.Group()
-        self.moedas = pygame.sprite.Group()        
+        self.moedas = pygame.sprite.Group()    
+        self.morreu = pygame.sprite.Group()
+        self.asas = pygame.sprite.Group()
         self.player = player
         self.mudar_mundo = 0#define o mundo inicial
         self.level_limit = -1000#define o tamanho do level
@@ -199,7 +206,11 @@ class Level(): #criação de uma classe pai "level" para podermos criar outros l
         self.backgrounds.draw(screen)
         self.monstros.draw(screen)
         self.moedas.draw(screen)
+        self.morreu.draw(screen)
+        self.asas.draw(screen)
     def shift_world(self, mudar_x):
+        '''nosso jogo ao inves de o personagem se mover por todo o cenario a partir de um momento o cenario se move
+        contra ele dando a impressao de movimento do persongem'''
         self.mudar_mundo += mudar_x#define a velocidade em que a tela se mexe 
         for platform in self.plataformas:
             platform.rect.x += mudar_x
@@ -209,7 +220,7 @@ class Level(): #criação de uma classe pai "level" para podermos criar outros l
         
         for background in self.backgrounds:
             background.rect.x += mudar_x
-class Moedas(pygame.sprite.Sprite):
+class Moedas(pygame.sprite.Sprite):#cria as sprites de moeda
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load('imagens/moeda.png')
@@ -236,22 +247,28 @@ class Monstros(pygame.sprite.Sprite):
         if self.rect.x == self.limitemin:#movimento do monstro para direita
             self.change_x = 2
         if self.change_x > 0:
-            if self.rect.x % 3 != 0:
+            if self.rect.x % 1.5 != 0:
                 self.image = pygame.image.load('imagens/MD.png')
-            if self.rect.x % 3 == 0:
+            if self.rect.x % 1.5 == 0:
                 self.image = pygame.image.load('imagens/MD2.png')
         if self.change_x < 0:
-            if self.rect.x % 3 != 0:
+            if self.rect.x % 1.5 != 0:
                 self.image = pygame.image.load('imagens/ME.png')
-            if self.rect.x % 3 == 0:
+            if self.rect.x % 1.5 == 0:
                 self.image = pygame.image.load('imagens/ME2.png')
-
+class Asas_de_fada(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('imagens/fada.png')
+        self.rect = self.image.get_rect()
                 
 class Level01(Level):
     def __init__(self,player):
         Level.__init__(self,player)
         
         self.level_limit = -4600#tamanho do level1
+        musica = pygame.mixer.Sound('musicas/musica.ogg')
+        musica.play()
         level = [[618, 100, 0, 500],
                  [900,100,890,500],
 [222,74,1087,293],
@@ -287,23 +304,27 @@ class Level01(Level):
             self.monstros.add(monstro)
         back = Background()      
         self.backgrounds.add(back)#adiciona o background no level
-        moedas = [[200,400]]#x e y das moedas na tela        
-        for moeda in moedas:
+        
+        
+        moedas = [[200,400]]#x e y das moedas na tela 
+        for moeda in moedas:#cria as moedas do jogo
             coin = Moedas()
             coin.rect.x = moeda[0]
             coin.rect.y = moeda[1]
-            self.moedas.add(coin)            
+            self.moedas.add(coin)  
+        asas = Asas_de_fada()
+        asas.rect.x = 3500
+        asas.rect.y = 300
+        self.asas.add(asas)
 def main():
     """ programa principal"""
-    pygame.init()#inici o pygame
+    pygame.init()#inicia o pygame
  
     size = [janela_widht, janela_height]#define o tamanho da telA
     screen = pygame.display.set_mode(size)#CRIA A TELA
  
     pygame.display.set_caption("Arthur no mundo das fadas")#titulo da janela
     pygame.display.set_icon(pygame.image.load(("imagens/fada.png")))#desenho do icone
-    pygame.mixer.music.load('musica.ogg') #carrega musica do jogo
-    
     
 	# Fill background
     background = pygame.Surface(screen.get_size())
@@ -319,9 +340,6 @@ def main():
 
 	# Blit everything to the screen
     screen.blit(background, (0, 0))
-    
-    
-    pygame.mixer.music.play()#roda a musica
    
     player = Player()#cria o player
  
@@ -403,5 +421,6 @@ def main():
     # Possibilita ao usuario fechar a tela do jogo
     pygame.quit()
  
+
 if __name__ == "__main__":
     main()                
